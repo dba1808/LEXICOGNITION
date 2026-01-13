@@ -1,126 +1,152 @@
-# AI Viva Voce Examiner
+# 🎓 ORION - AI Viva Voce System
 
-🎓 A RAG-powered AI examination system for academic viva voce evaluation.
+An intelligent AI-powered viva examination system with real-time voice interaction, camera proctoring, and PDF-based question generation.
 
-## Features
+## ✨ Features
 
-- **PDF Processing**: Upload research papers and extract content using pdfplumber
-- **RAG-based Questions**: Generate conceptual viva-style questions from documents
-- **Hybrid Evaluation**: Combines semantic similarity + keyword matching for fair scoring
-- **Voice Mode**: Speech-to-Text (Whisper) and Text-to-Speech (gTTS) support
-- **Real-time Feedback**: Instant scoring with detailed academic feedback
+- **AI Examiner** - Powered by Gemini 3 Flash Preview
+- **Voice Interaction** - Real-time speech-to-text and text-to-speech
+- **PDF Analysis** - RAG-based question generation from study materials
+- **Camera Proctoring** - Webcam monitoring during exams
+- **Smart Evaluation** - Hybrid semantic + keyword scoring
+- **Beautiful UI** - Retro dark theme with golden accents
 
 ## 🚀 Quick Start
 
-### 1. Install Dependencies
+### Prerequisites
 
-```bash
-pip install -r requirements.txt
-```
+- Python 3.9+ (Python 3.10+ recommended)
+- A Google Gemini API Key ([Get one here](https://aistudio.google.com/apikey))
 
-### 2. Configure Environment
+### Installation
 
-Copy the example environment file and add your API keys:
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-username/ORION.git
+   cd ORION
+   ```
 
-```bash
-copy .env.example .env
-```
+2. **Create virtual environment**
+   ```bash
+   python -m venv .venv
+   
+   # Windows
+   .venv\Scripts\activate
+   
+   # Linux/Mac
+   source .venv/bin/activate
+   ```
 
-Edit `.env` and add your API key:
-- For Google Gemini: `GOOGLE_API_KEY=your_key_here`
-- For OpenAI: `OPENAI_API_KEY=your_key_here`
+3. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### 3. Start the Backend Server
+4. **Configure environment variables**
+   ```bash
+   # Copy the example file
+   cp .env.example .env
+   
+   # Edit .env and add your API key
+   # GOOGLE_API_KEY=your_api_key_here
+   ```
 
-```bash
-python -m backend.main
-```
+5. **Run the application**
+   ```bash
+   # Simple single command (starts both backend and frontend)
+   python run.py
+   
+   # OR run frontend only
+   streamlit run frontend/app.py --server.port 8501
+   ```
 
-The API server will start at `http://localhost:8000`
-
-### 4. Start the Frontend
-
-In a new terminal:
-
-```bash
-streamlit run frontend/app.py
-```
-
-The UI will open at `http://localhost:8501`
+6. **Open in browser**
+   - Frontend: http://localhost:8501
+   - Backend API: http://localhost:8000
 
 ## 📁 Project Structure
 
 ```
-LEXICOGNITION/
-├── backend/
-│   ├── __init__.py
-│   ├── config.py           # Configuration settings
-│   ├── main.py            # FastAPI endpoints
-│   ├── pdf_processor.py   # PDF extraction & chunking
-│   ├── embeddings.py      # Sentence Transformers embeddings
-│   ├── vector_store.py    # FAISS vector database
-│   ├── llm_engine.py      # OpenAI/Gemini integration
-│   ├── prompts.py         # System prompts
-│   ├── question_generator.py  # RAG question generation
-│   ├── evaluation_engine.py   # Hybrid answer evaluation
-│   ├── voice_engine.py    # STT/TTS processing
-│   └── session_manager.py # Session handling
+ORION/
 ├── frontend/
-│   └── app.py             # Streamlit UI
-├── requirements.txt
-├── .env.example
-└── README.md
+│   ├── app.py              # Main Streamlit application
+│   └── live_conversation.py # Viva interface components
+├── backend/
+│   ├── main.py             # FastAPI backend
+│   ├── llm_engine.py       # Gemini AI integration
+│   ├── question_generator.py # RAG-based question generation
+│   ├── evaluation_engine.py  # Answer evaluation
+│   ├── voice_engine.py     # TTS/STT functionality
+│   └── database.py         # SQLite database
+├── assets/
+│   ├── orion_logo.png      # ORION logo
+│   └── ai_examiner.png     # AI avatar
+├── data/                   # Database and uploads
+├── .env.example            # Environment template
+├── requirements.txt        # Python dependencies
+└── run.py                  # Simple startup script
 ```
 
-## 🔧 API Endpoints
+## 🔧 Troubleshooting
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/session/create` | POST | Create new examination session |
-| `/upload_pdf` | POST | Upload PDF for processing |
-| `/generate_questions` | POST | Generate viva questions |
-| `/ask_question/{session_id}` | GET | Get next question |
-| `/submit_answer` | POST | Submit answer for evaluation |
-| `/submit_voice_answer` | POST | Submit voice recording |
-| `/get_report/{session_id}` | GET | Get final report |
+### "Streamlit not connected" Error
 
-## 📊 Evaluation System
+1. Make sure you have installed all dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-The system uses a **hybrid scoring approach**:
+2. Verify the `.env` file exists with your API key:
+   ```bash
+   # Check if .env exists
+   ls .env
+   
+   # If not, copy from example
+   cp .env.example .env
+   ```
 
+3. Try running with a different port:
+   ```bash
+   streamlit run frontend/app.py --server.port 8505
+   ```
+
+### Dependencies Issues
+
+If you encounter dependency conflicts:
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt --force-reinstall
 ```
-Final Score = 0.6 × Semantic Similarity + 0.4 × Keyword Coverage
+
+### PyAudio Installation (for voice features)
+
+**Windows:**
+```bash
+pip install pipwin
+pipwin install pyaudio
 ```
 
-- **Semantic Similarity**: Uses sentence embeddings to measure conceptual understanding
-- **Keyword Coverage**: Checks for important technical terms from the paper
-- **LLM Evaluation**: Additional detailed feedback from the language model
+**Linux:**
+```bash
+sudo apt-get install portaudio19-dev
+pip install pyaudio
+```
 
-### Scoring Criteria
+**Mac:**
+```bash
+brew install portaudio
+pip install pyaudio
+```
 
-| Score | Description |
-|-------|-------------|
-| 1-3 | Incorrect or irrelevant |
-| 4-6 | Partially correct, missing core concepts |
-| 7-8 | Correct with minor gaps |
-| 9-10 | Fully correct with clear reasoning |
+## 🔐 User Roles
 
-## 🎙️ Voice Mode
-
-When enabled, the system can:
-- Speak questions aloud using Google TTS
-- Accept voice answers via Whisper transcription
-- Provide audio feedback on scores
-
-## 🛠️ Technology Stack
-
-- **Backend**: FastAPI, Python 3.10+
-- **RAG**: LangChain, FAISS, Sentence Transformers
-- **LLM**: OpenAI GPT-4 or Google Gemini
-- **PDF**: pdfplumber
-- **Voice**: Whisper (STT), gTTS (TTS)
-- **Frontend**: Streamlit
+- **Teacher**: Create exams, upload PDFs, assign to students, view results
+- **Student**: Take assigned exams, voice-based viva interaction
 
 ## 📝 License
 
 MIT License
+
+## 🤝 Contributing
+
+Pull requests are welcome! For major changes, please open an issue first.

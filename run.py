@@ -1,5 +1,5 @@
 """
-LexiCognition - Simple Single-Command Startup
+ORION - Simple Single-Command Startup
 Just run: python run.py
 """
 import subprocess
@@ -38,7 +38,7 @@ def kill_port(port):
 def main():
     print("""
     ╔══════════════════════════════════════════════════════════════╗
-    ║           🎓 LexiCognition - Starting...                     ║
+    ║              🎓 ORION - AI Viva Voce System                  ║
     ╚══════════════════════════════════════════════════════════════╝
     """)
     

@@ -30,8 +30,16 @@ ENV/
 env/
 .venv/
 
-# Environment variables (keep .env.local secret)
+# Environment variables (NEVER commit .env with API keys!)
+.env
 .env.local
+.env.*.local
+!.env.example
+
+# Database files
+data/*.db
+*.sqlite
+*.sqlite3
 
 # IDE
 .idea/

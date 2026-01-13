@@ -1,11 +1,14 @@
 """
 Embeddings Module - Handles text embeddings using Sentence Transformers
 """
-from typing import List, Optional
+from typing import List, Optional, TYPE_CHECKING
 import numpy as np
-from sentence_transformers import SentenceTransformer
 
 from backend.config import settings
+
+# Lazy import to avoid threading issues with Streamlit
+if TYPE_CHECKING:
+    from sentence_transformers import SentenceTransformer
 
 
 class EmbeddingEngine:
@@ -14,7 +17,7 @@ class EmbeddingEngine:
     """
     
     _instance: Optional['EmbeddingEngine'] = None
-    _model: Optional[SentenceTransformer] = None
+    _model: Optional['SentenceTransformer'] = None
     
     def __new__(cls):
         """Singleton pattern to avoid loading model multiple times"""
@@ -23,17 +26,20 @@ class EmbeddingEngine:
         return cls._instance
     
     def __init__(self):
-        if self._model is None:
-            self._load_model()
+        # Don't load model on init - load lazily when needed
+        pass
     
     def _load_model(self):
-        """Load the embedding model"""
-        print(f"🔄 Loading embedding model: {settings.embedding_model}")
-        self._model = SentenceTransformer(settings.embedding_model)
-        print(f"✅ Embedding model loaded successfully")
+        """Load the embedding model (lazy loading)"""
+        if self._model is None:
+            # Import here to avoid threading issues
+            from sentence_transformers import SentenceTransformer
+            print(f"🔄 Loading embedding model: {settings.embedding_model}")
+            self._model = SentenceTransformer(settings.embedding_model)
+            print(f"✅ Embedding model loaded successfully")
     
     @property
-    def model(self) -> SentenceTransformer:
+    def model(self) -> 'SentenceTransformer':
         """Get the embedding model"""
         if self._model is None:
             self._load_model()

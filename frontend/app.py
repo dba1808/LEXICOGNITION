@@ -1,5 +1,5 @@
 """
-LexiCognition - Professional Viva Voce System
+ORION - Professional AI Viva Voce System
 Complete UI with all features
 """
 import streamlit as st
@@ -49,7 +49,7 @@ from backend.config import settings
 
 # Page configuration
 st.set_page_config(
-    page_title="LexiCognition - AI Viva Examiner",
+    page_title="ORION - AI Viva Examiner",
     page_icon="🎓",
     layout="centered",
     initial_sidebar_state="collapsed"
@@ -61,11 +61,17 @@ API_BASE_URL = "http://localhost:8000"
 def get_base64_image(path):
     try:
         with open(path, "rb") as image_file:
-            return base64.b64encode(image_file).read().decode()
-    except:
+            image_data = image_file.read()
+            return base64.b64encode(image_data).decode('utf-8')
+    except Exception as e:
+        print(f"⚠️ Error loading image {path}: {e}")
         return ""
 
-IMAGE_PATH = "c:/Users/bhatt/Pictures/LEXICOGNITION/assets/ai_examiner.png"
+# Use relative paths from project root for portability
+PROJECT_ROOT = Path(__file__).parent.parent
+ASSETS_DIR = PROJECT_ROOT / "assets"
+IMAGE_PATH = ASSETS_DIR / "ai_examiner.png"
+ORION_LOGO_PATH = ASSETS_DIR / "orion_logo.png"
 base64_img = get_base64_image(IMAGE_PATH)
 
 # ========== RETRO PROFESSIONAL DARK UI ==========
@@ -365,43 +371,66 @@ st.markdown(f"""
         border-radius: 4px !important;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
     }}
-    
-    /* Dropdown options - FORCE DARK BACKGROUND WITH READABLE TEXT */
-    .stSelectbox option,
-    .stSelectbox [role="option"],
-    .stSelectbox li,
-    div[data-baseweb="menu"] li,
-    div[data-baseweb="menu"] [role="option"],
-    [data-baseweb="select"] [role="option"] {{
-        background: #16161f !important;
-        background-color: #16161f !important;
-        color: #f5f0dc !important;
-        padding: 0.75rem 1rem !important;
-        font-size: 0.9rem !important;
-        transition: all 0.2s ease !important;
+    /* ===== DROPDOWN FIX - FORCE BLACK TEXT ===== */
+    /* Target ALL dropdown/menu text to be BLACK */
+    div[data-baseweb="popover"] *,
+    div[data-baseweb="menu"] *,
+    div[data-baseweb="select"] ul *,
+    ul[role="listbox"] *,
+    [role="listbox"] *,
+    .stSelectbox ul * {{
+        color: #000000 !important;
+        -webkit-text-fill-color: #000000 !important;
     }}
     
-    /* Hover state for options */
-    .stSelectbox [role="option"]:hover,
-    .stSelectbox li:hover,
+    /* Menu container - white background */
+    div[data-baseweb="popover"],
+    div[data-baseweb="popover"] > div,
+    div[data-baseweb="menu"],
+    ul[role="listbox"],
+    [role="listbox"] {{
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+        border: 1px solid #333 !important;
+        border-radius: 4px !important;
+    }}
+    
+    /* Each option item */
+    div[data-baseweb="menu"] li,
+    div[data-baseweb="popover"] li,
+    ul[role="listbox"] li,
+    [role="option"] {{
+        background: #ffffff !important;
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        -webkit-text-fill-color: #000000 !important;
+        padding: 10px 14px !important;
+        font-size: 0.9rem !important;
+    }}
+    
+    /* Hover state */
     div[data-baseweb="menu"] li:hover,
-    div[data-baseweb="menu"] [role="option"]:hover,
-    [data-baseweb="select"] [role="option"]:hover {{
-        background: #1e1e28 !important;
-        background-color: #1e1e28 !important;
-        color: #d4a853 !important;
+    div[data-baseweb="popover"] li:hover,
+    ul[role="listbox"] li:hover,
+    [role="option"]:hover {{
+        background: #e0e0e0 !important;
+        background-color: #e0e0e0 !important;
+        color: #000000 !important;
     }}
     
     /* Selected/highlighted option */
-    .stSelectbox [role="option"][aria-selected="true"],
-    [data-baseweb="menu"] [aria-selected="true"] {{
-        background: #1e1e28 !important;
-        color: #d4a853 !important;
+    [role="option"][aria-selected="true"],
+    li[aria-selected="true"] {{
+        background: #d0d0d0 !important;
+        color: #000000 !important;
+        font-weight: 600 !important;
     }}
     
+    /* Keep the selectbox trigger text light */
     .stSelectbox [data-baseweb="select"] span,
     .stSelectbox [data-baseweb="select"] div {{
         color: var(--text-primary) !important;
+        -webkit-text-fill-color: var(--text-primary) !important;
     }}
     
     /* ===== INPUT LABELS ===== */
@@ -836,23 +865,26 @@ def render_auth():
         st.session_state.welcome_shown = False
     
     if not st.session_state.welcome_shown:
+        # Load ORION logo as base64
+        orion_logo_b64 = get_base64_image(ORION_LOGO_PATH)
+        
         # Show welcome animation
-        welcome_html = """
+        welcome_html = f"""
         <!DOCTYPE html>
         <html>
         <head>
             <style>
                 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&display=swap');
                 
-                * {
+                * {{
                     margin: 0;
                     padding: 0;
                     box-sizing: border-box;
                     font-family: 'IBM Plex Mono', monospace;
                     cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='4' fill='%23d4a853'/%3E%3Ccircle cx='12' cy='12' r='8' fill='none' stroke='%23d4a853' stroke-width='1' opacity='0.5'/%3E%3C/svg%3E") 12 12, auto;
-                }
+                }}
                 
-                body {
+                body {{
                     background: linear-gradient(165deg, #0a0a12 0%, #0d0d18 50%, #101020 100%);
                     min-height: 100vh;
                     display: flex;
@@ -860,10 +892,10 @@ def render_auth():
                     align-items: center;
                     justify-content: center;
                     overflow: hidden;
-                }
+                }}
                 
                 /* Ambient golden glow */
-                body::before {
+                body::before {{
                     content: '';
                     position: fixed;
                     top: 0; left: 0; right: 0; bottom: 0;
@@ -873,26 +905,26 @@ def render_auth():
                         radial-gradient(ellipse at 70% 60%, rgba(212, 168, 83, 0.06) 0%, transparent 45%);
                     pointer-events: none;
                     animation: ambientPulse 4s ease-in-out infinite alternate;
-                }
+                }}
                 
-                @keyframes ambientPulse {
-                    0% { opacity: 0.6; }
-                    100% { opacity: 1; }
-                }
+                @keyframes ambientPulse {{
+                    0% {{ opacity: 0.6; }}
+                    100% {{ opacity: 1; }}
+                }}
                 
-                .welcome-container {
+                .welcome-container {{
                     text-align: center;
                     z-index: 1;
-                }
+                }}
                 
                 /* Wave animated title */
-                .title-container {
+                .title-container {{
                     display: flex;
                     justify-content: center;
                     margin-bottom: 30px;
-                }
+                }}
                 
-                .wave-letter {
+                .wave-letter {{
                     font-size: 4rem;
                     font-weight: 700;
                     color: #d4a853;
@@ -903,49 +935,64 @@ def render_auth():
                     display: inline-block;
                     animation: wave 2s ease-in-out infinite;
                     animation-delay: calc(var(--i) * 0.1s);
-                }
+                }}
                 
-                @keyframes wave {
-                    0%, 100% {
+                @keyframes wave {{
+                    0%, 100% {{
                         transform: translateY(0) scale(1);
                         color: #d4a853;
                         text-shadow: 
                             0 0 20px rgba(212, 168, 83, 0.5),
                             0 0 40px rgba(212, 168, 83, 0.3);
-                    }
-                    50% {
+                    }}
+                    50% {{
                         transform: translateY(-15px) scale(1.1);
                         color: #f5d383;
                         text-shadow: 
                             0 0 30px rgba(245, 211, 131, 0.7),
                             0 0 60px rgba(212, 168, 83, 0.5),
                             0 0 80px rgba(212, 168, 83, 0.3);
-                    }
-                }
+                    }}
+                }}
                 
-                .subtitle {
+                .subtitle {{
                     color: #9a9585;
                     font-size: 0.9rem;
                     letter-spacing: 0.4em;
                     text-transform: uppercase;
-                    margin-bottom: 50px;
+                    margin-bottom: 30px;
                     animation: fadeIn 1s ease-out 1.5s both;
-                }
+                }}
                 
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(10px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
+                /* Logo image styling */
+                .logo-image {{
+                    width: 120px;
+                    height: auto;
+                    margin-bottom: 30px;
+                    animation: logoFloat 3s ease-in-out infinite, fadeIn 1s ease-out 0.5s both;
+                    filter: drop-shadow(0 0 20px rgba(212, 168, 83, 0.4)) 
+                            drop-shadow(0 0 40px rgba(212, 168, 83, 0.2));
+                }}
+                
+                @keyframes logoFloat {{
+                    0%, 100% {{ transform: translateY(0) scale(1); }}
+                    50% {{ transform: translateY(-8px) scale(1.02); }}
+                }}
+                
+                @keyframes fadeIn {{
+                    from {{ opacity: 0; transform: translateY(10px); }}
+                    to {{ opacity: 1; transform: translateY(0); }}
+                }}
                 
                 /* Round loader */
-                .loader-container {
+                .loader-container {{
                     display: flex;
                     flex-direction: column;
                     align-items: center;
                     animation: fadeIn 1s ease-out 2s both;
-                }
+                }}
                 
-                .round-loader {
+                .round-loader {{
                     width: 50px;
                     height: 50px;
                     border: 3px solid #2a2a3a;
@@ -954,35 +1001,35 @@ def render_auth():
                     animation: spin 1s linear infinite;
                     margin-bottom: 20px;
                     box-shadow: 0 0 20px rgba(212, 168, 83, 0.2);
-                }
+                }}
                 
-                @keyframes spin {
-                    0% { transform: rotate(0deg); }
-                    100% { transform: rotate(360deg); }
-                }
+                @keyframes spin {{
+                    0% {{ transform: rotate(0deg); }}
+                    100% {{ transform: rotate(360deg); }}
+                }}
                 
-                .loading-text {
+                .loading-text {{
                     color: #9a9585;
                     font-size: 0.8rem;
                     letter-spacing: 0.2em;
                     text-transform: uppercase;
-                }
+                }}
                 
-                .loading-dots::after {
+                .loading-dots::after {{
                     content: '';
                     animation: dots 1.5s steps(4, end) infinite;
-                }
+                }}
                 
-                @keyframes dots {
-                    0% { content: ''; }
-                    25% { content: '.'; }
-                    50% { content: '..'; }
-                    75% { content: '...'; }
-                    100% { content: ''; }
-                }
+                @keyframes dots {{
+                    0% {{ content: ''; }}
+                    25% {{ content: '.'; }}
+                    50% {{ content: '..'; }}
+                    75% {{ content: '...'; }}
+                    100% {{ content: ''; }}
+                }}
                 
                 /* Golden particles */
-                .particle {
+                .particle {{
                     position: fixed;
                     width: 4px;
                     height: 4px;
@@ -991,24 +1038,24 @@ def render_auth():
                     pointer-events: none;
                     opacity: 0;
                     animation: float 8s ease-in-out infinite;
-                }
+                }}
                 
-                @keyframes float {
-                    0%, 100% {
+                @keyframes float {{
+                    0%, 100% {{
                         opacity: 0;
                         transform: translateY(100vh) scale(0);
-                    }
-                    10% {
+                    }}
+                    10% {{
                         opacity: 0.8;
-                    }
-                    90% {
+                    }}
+                    90% {{
                         opacity: 0.3;
-                    }
-                    100% {
+                    }}
+                    100% {{
                         opacity: 0;
                         transform: translateY(-100vh) scale(1);
-                    }
-                }
+                    }}
+                }}
             </style>
         </head>
         <body>
@@ -1022,20 +1069,15 @@ def render_auth():
             <div class="particle" style="left: 90%; animation-delay: 0.8s;"></div>
             
             <div class="welcome-container">
+                <!-- ORION Logo -->
+                <img src="data:image/png;base64,{orion_logo_b64}" class="logo-image" alt="ORION Logo">
+                
                 <div class="title-container">
-                    <span class="wave-letter" style="--i: 0">L</span>
-                    <span class="wave-letter" style="--i: 1">E</span>
-                    <span class="wave-letter" style="--i: 2">X</span>
-                    <span class="wave-letter" style="--i: 3">I</span>
-                    <span class="wave-letter" style="--i: 4">C</span>
-                    <span class="wave-letter" style="--i: 5">O</span>
-                    <span class="wave-letter" style="--i: 6">G</span>
-                    <span class="wave-letter" style="--i: 7">N</span>
-                    <span class="wave-letter" style="--i: 8">I</span>
-                    <span class="wave-letter" style="--i: 9">T</span>
-                    <span class="wave-letter" style="--i: 10">I</span>
-                    <span class="wave-letter" style="--i: 11">O</span>
-                    <span class="wave-letter" style="--i: 12">N</span>
+                    <span class="wave-letter" style="--i: 0">O</span>
+                    <span class="wave-letter" style="--i: 1">R</span>
+                    <span class="wave-letter" style="--i: 2">I</span>
+                    <span class="wave-letter" style="--i: 3">O</span>
+                    <span class="wave-letter" style="--i: 4">N</span>
                 </div>
                 <div class="subtitle">AI Viva Voce Examiner</div>
                 
@@ -1047,10 +1089,10 @@ def render_auth():
             
             <script>
                 // Auto-redirect after animation
-                setTimeout(() => {
+                setTimeout(function() {{
                     localStorage.setItem('welcome_complete', 'true');
                     window.location.reload();
-                }, 4000);
+                }}, 4000);
             </script>
         </body>
         </html>
@@ -1078,7 +1120,7 @@ def render_auth():
     # Regular auth page
     st.markdown(f"""
     <div class="logo-container">
-        <h1 class="logo-text">LexiCognition</h1>
+        <h1 class="logo-text">ORION</h1>
         <p class="subtitle">AI VIVA VOCE EXAMINER</p>
     </div>
     """, unsafe_allow_html=True)
@@ -1109,7 +1151,7 @@ def render_auth():
     
     with tab_reg:
         st.markdown('<h2 class="auth-title">Create Account</h2>', unsafe_allow_html=True)
-        st.markdown('<p class="auth-subtitle">Join LexiCognition today</p>', unsafe_allow_html=True)
+        st.markdown('<p class="auth-subtitle">Join ORION today</p>', unsafe_allow_html=True)
         
         # Teacher vs Student Selection (OUTSIDE FORM to trigger rerun)
         user_type = st.radio("I am a:", ["Student", "Teacher"], horizontal=True, key="reg_role_radio")
@@ -1389,7 +1431,7 @@ def render_teacher_dashboard():
     # Header with ID
     st.markdown(f"""
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-        <h1 class="logo-text" style="font-size: 2rem;">LexiCognition</h1>
+        <h1 class="logo-text" style="font-size: 2rem;">ORION</h1>
         <div style="text-align: right;">
             <div style="font-weight: 600; font-size: 1.2rem;">{user['name']}</div>
             <div class="id-badge">Teacher ID: #{user['user_id']}</div>
@@ -1685,7 +1727,7 @@ def render_student_dashboard():
     # Header with Student ID
     st.markdown(f"""
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-        <h1 class="logo-text" style="font-size: 2rem;">LexiCognition</h1>
+        <h1 class="logo-text" style="font-size: 2rem;">ORION</h1>
         <div style="text-align: right;">
             <div style="font-weight: 600; font-size: 1.2rem;">{user['name']}</div>
             <div class="id-badge">Student ID: #{user['user_id']}</div>
