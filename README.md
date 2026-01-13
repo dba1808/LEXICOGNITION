@@ -130,9 +130,7 @@ pip install pyaudio
 - **Teacher**: Create exams, upload PDFs, assign to students, view results
 - **Student**: Take assigned exams, voice-based viva interaction
 
-## 📝 License
 
-MIT License
 
 ## 🤝 Contributing
 
