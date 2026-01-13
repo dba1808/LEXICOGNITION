@@ -1,0 +1,19 @@
+================================================================================
+ORION DATABASE - REGISTERED USERS
+================================================================================
+
+ID    Name                      Email                               Role       Class
+--------------------------------------------------------------------------------
+1     DEBAYUDH BHATTACHARYA     bhattacharyadebayudh13@gmail.com    student    BTech Year 3
+2     ARNAB BASAK               arnabbasak24@gmail.com              teacher    PhD
+3     DEBAYUDH BHATTACHARYA     bhattacharyadebayudh23@gmail.com    student    B.Tech - 3rd Year
+4     SRIJAN GHOSH              gsrijan82@gmail.com                 student    B.Tech - 3rd Year
+5     Test Student              test@student.com                    student    B.Tech - 1st Year
+6     Test Teacher              test@teacher.com                    teacher    Faculty
+7     Test Teacher              test@teacher.comtest2@teacher.com   teacher    Faculty
+8     Unique Teacher            teacher_unique_1@test.com           teacher    Faculty
+9     BASTAB DAS                dasbastab20@gmail.com               teacher    Faculty
+10    BINEETA DAS               bineeta1922@gmail.com               student    B.Tech - 2nd Year
+--------------------------------------------------------------------------------
+Total users: 10
+================================================================================

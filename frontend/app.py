@@ -178,39 +178,106 @@ st.markdown(f"""
         color: var(--text-secondary) !important;
     }}
     
-    /* ===== LOGO STYLING ===== */
-    .logo-text {{
-        font-size: 2.8rem;
-        font-weight: 700;
-        color: var(--text-primary) !important;
+    /* ===== ORION ENTERPRISE LOGO - KLAXON STYLE ===== */
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@700&display=swap');
+    
+    .logo-container {{
+        background: #000000 !important;
+        padding: 60px 20px 40px 20px;
+        margin: -20px -20px 30px -20px;
         text-align: center;
-        margin-bottom: 0.5rem;
-        letter-spacing: 0.08em;
+        position: relative;
+        overflow: hidden;
+    }}
+    
+    .logo-container::before {{
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: 
+            linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.02) 50%, transparent 100%);
+        animation: scanLine 3s linear infinite;
+    }}
+    
+    @keyframes scanLine {{
+        0% {{ transform: translateX(-100%); }}
+        100% {{ transform: translateX(100%); }}
+    }}
+    
+    .logo-text {{
+        font-family: 'Bebas Neue', 'Oswald', 'Impact', sans-serif !important;
+        font-size: 5.5rem !important;
+        font-weight: 700 !important;
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+        text-align: center;
+        margin: 0 !important;
+        padding: 0 !important;
+        letter-spacing: 0.15em;
         text-transform: uppercase;
-        text-shadow: 0 0 30px var(--glow-gold);
-        animation: logoGlow 3s ease-in-out infinite;
-        -webkit-text-fill-color: var(--text-primary) !important;
+        line-height: 1;
+        position: relative;
+        display: inline-block;
+        animation: morphGlow 4s ease-in-out infinite;
+        text-shadow: none;
         background: none !important;
     }}
     
-    @keyframes logoGlow {{
+    /* Morph/Glitch effect */
+    .logo-text::before {{
+        content: 'ORION';
+        position: absolute;
+        top: 0;
+        left: 2px;
+        color: rgba(255, 100, 100, 0.8);
+        -webkit-text-fill-color: rgba(255, 100, 100, 0.8);
+        clip-path: inset(0 0 50% 0);
+        animation: glitchTop 2.5s infinite linear alternate-reverse;
+    }}
+    
+    .logo-text::after {{
+        content: 'ORION';
+        position: absolute;
+        top: 0;
+        left: -2px;
+        color: rgba(100, 200, 255, 0.8);
+        -webkit-text-fill-color: rgba(100, 200, 255, 0.8);
+        clip-path: inset(50% 0 0 0);
+        animation: glitchBottom 2.5s infinite linear alternate-reverse;
+    }}
+    
+    @keyframes glitchTop {{
+        0%, 90%, 100% {{ transform: translate(0); opacity: 0; }}
+        92%, 94%, 96%, 98% {{ transform: translate(-2px, -1px); opacity: 0.8; }}
+        93%, 95%, 97%, 99% {{ transform: translate(2px, 1px); opacity: 0.6; }}
+    }}
+    
+    @keyframes glitchBottom {{
+        0%, 90%, 100% {{ transform: translate(0); opacity: 0; }}
+        92%, 94%, 96%, 98% {{ transform: translate(2px, 1px); opacity: 0.8; }}
+        93%, 95%, 97%, 99% {{ transform: translate(-2px, -1px); opacity: 0.6; }}
+    }}
+    
+    @keyframes morphGlow {{
         0%, 100% {{ 
-            text-shadow: 0 0 20px var(--glow-gold), 0 0 40px rgba(212, 168, 83, 0.1);
-            opacity: 1;
+            filter: brightness(1);
+            text-shadow: 0 0 0 transparent;
         }}
         50% {{ 
-            text-shadow: 0 0 30px var(--glow-gold), 0 0 60px rgba(212, 168, 83, 0.2);
-            opacity: 0.95;
+            filter: brightness(1.1);
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
         }}
     }}
     
     .subtitle {{
+        font-family: 'IBM Plex Mono', monospace !important;
         text-align: center;
-        color: var(--text-muted) !important;
-        font-size: 0.85rem;
-        font-weight: 400;
-        margin-bottom: 2.5rem;
-        letter-spacing: 0.25em;
+        color: #666666 !important;
+        -webkit-text-fill-color: #666666 !important;
+        font-size: 0.75rem !important;
+        font-weight: 400 !important;
+        margin: 15px 0 0 0 !important;
+        letter-spacing: 0.4em;
         text-transform: uppercase;
     }}
     
@@ -874,7 +941,7 @@ def render_auth():
         <html>
         <head>
             <style>
-                @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&display=swap');
+                @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600;700&display=swap');
                 
                 * {{
                     margin: 0;
@@ -917,41 +984,45 @@ def render_auth():
                     z-index: 1;
                 }}
                 
-                /* Wave animated title */
+                /* KLAXON-style enterprise title */
                 .title-container {{
                     display: flex;
                     justify-content: center;
-                    margin-bottom: 30px;
+                    margin-bottom: 20px;
                 }}
                 
                 .wave-letter {{
-                    font-size: 4rem;
+                    font-family: 'Bebas Neue', 'Impact', sans-serif;
+                    font-size: 6rem;
                     font-weight: 700;
-                    color: #d4a853;
-                    text-shadow: 
-                        0 0 20px rgba(212, 168, 83, 0.5),
-                        0 0 40px rgba(212, 168, 83, 0.3),
-                        0 0 60px rgba(212, 168, 83, 0.2);
+                    color: #ffffff;
+                    text-shadow: none;
                     display: inline-block;
-                    animation: wave 2s ease-in-out infinite;
-                    animation-delay: calc(var(--i) * 0.1s);
+                    animation: glitchLetter 3s ease-in-out infinite;
+                    animation-delay: calc(var(--i) * 0.15s);
+                    letter-spacing: 0.1em;
                 }}
                 
-                @keyframes wave {{
-                    0%, 100% {{
-                        transform: translateY(0) scale(1);
-                        color: #d4a853;
-                        text-shadow: 
-                            0 0 20px rgba(212, 168, 83, 0.5),
-                            0 0 40px rgba(212, 168, 83, 0.3);
+                @keyframes glitchLetter {{
+                    0%, 90%, 100% {{
+                        transform: translateY(0) skewX(0deg);
+                        color: #ffffff;
+                        text-shadow: 0 0 0 transparent;
                     }}
-                    50% {{
-                        transform: translateY(-15px) scale(1.1);
-                        color: #f5d383;
-                        text-shadow: 
-                            0 0 30px rgba(245, 211, 131, 0.7),
-                            0 0 60px rgba(212, 168, 83, 0.5),
-                            0 0 80px rgba(212, 168, 83, 0.3);
+                    92% {{
+                        transform: translateY(-5px) skewX(-2deg);
+                        color: #ff6b6b;
+                        text-shadow: 2px 0 #00ffff, -2px 0 #ff0066;
+                    }}
+                    94% {{
+                        transform: translateY(5px) skewX(2deg);
+                        color: #6bffff;
+                        text-shadow: -2px 0 #ff6b6b, 2px 0 #0066ff;
+                    }}
+                    96% {{
+                        transform: translateY(-3px) skewX(-1deg);
+                        color: #ffffff;
+                        text-shadow: 1px 0 #ff0066, -1px 0 #00ffff;
                     }}
                 }}
                 
